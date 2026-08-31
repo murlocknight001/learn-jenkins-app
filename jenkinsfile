@@ -1,10 +1,33 @@
 pipeline {
+    // 默认允许流水线在任意可用的 Jenkins Agent 上运行
     agent any
 
     stages {
-        stage('Hello') {
+        // 安装项目依赖并构建应用
+        stage('Build') {
+            agent {
+                docker {
+                    // 在轻量级 Node.js 18 容器中执行本阶段
+                    image 'node:18-alpine'
+                    // 复用当前工作空间，确保容器能够访问已检出的代码
+                    reuseNode true
+                }
+            }
             steps {
-                sh 'echo "hello from jenkins"'
+                // 执行构建所需的 Shell 命令
+                sh '''
+                   # 查看构建前的工作空间内容
+                   ls -la
+                   # 输出 Node.js 与 npm 版本，便于排查环境问题
+                   node --version
+                   npm --version
+                   # 根据 package-lock.json 进行可重复的依赖安装
+                   npm ci
+                   # 执行 package.json 中定义的构建脚本
+                   npm run build
+                   # 查看构建后生成的文件
+                   ls -la
+                '''
             }
         }
     }
