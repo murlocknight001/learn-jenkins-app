@@ -33,7 +33,7 @@ pipeline {
 
         stage('test'){
             agent {
-                在test阶段拉取nodejs环境
+                //在test阶段拉取nodejs环境
                 docker {
                     // 在轻量级 Node.js 18 容器中执行本阶段
                     image 'node:18-alpine'
