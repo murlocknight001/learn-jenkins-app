@@ -33,7 +33,8 @@ pipeline {
 
         stage('test'){
             steps{
-            [ -f /build/index.html ]
+                //查看index.hmtl文件是否在build目录里
+                [ -f /build/index.html ]
             }
 
         }
