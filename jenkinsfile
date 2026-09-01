@@ -32,8 +32,10 @@ pipeline {
         }
 
         stage('test'){
+            steps{
             [ -f /build/index.html ]
-            
+            }
+
         }
 
     }
