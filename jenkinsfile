@@ -32,6 +32,16 @@ pipeline {
         }
 
         stage('test'){
+            agent {
+                在test阶段拉取nodejs环境
+                docker {
+                    // 在轻量级 Node.js 18 容器中执行本阶段
+                    image 'node:18-alpine'
+                    // 复用当前工作空间，确保容器能够访问已检出的代码
+                    reuseNode true
+                }
+            }
+            
             steps{
               //查看index.hmtl文件是否在build目录里
               sh '[ -f build/index.html ]'              
