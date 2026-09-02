@@ -51,12 +51,34 @@ pipeline {
 
         }
 
-    }
+        stage('E2E'){
+            agent {
+                //在ESE测试阶段拉取playwright
+                docker {
+                    // 拉取playwright镜像
+                    image 'mcr.microsoft.com/playwright:v1.62.0-noble'
+                    // 复用当前工作空间，确保容器能够访问已检出的代码
+                    reuseNode true
+                }
+            }
+            
+            steps{
+              //安装静态服务器 
+              sh 'npm install -g serve'
+              //部署服务
+              sh 'serve -s build'
+              //用 Playwright 运行自动化测试的命令，通常用于测试网页功能
+              sh 'npx playwright test'
 
-    post {
-        always{
-            // 无论流水线成功或失败，都收集 JUnit XML 测试报告并在 Jenkins 中展示测试结果
-            junit 'test-results/junit.xml'
+            }
+
         }
     }
+
+     post {
+         always{
+             // 无论流水线成功或失败，都收集 JUnit XML 测试报告并在 Jenkins 中展示测试结果
+             junit 'test-results/junit.xml'
+            }
+          }
 }
