@@ -52,14 +52,15 @@ pipeline {
                     sh 'CI=true npm test'
                 }
 
-            }
-
                 post {
                     always{
                         //无论流水线成功或失败，都收集 JUnit XML 测试报告并在 Jenkins 中展示测试结果
                         junit 'jtest-results/junit.xml'      
                         }
                     }
+
+            }
+
 
                 stage('E2E'){
                     agent {
@@ -83,13 +84,15 @@ pipeline {
 
                     }
 
+                    post {
+                        always{
+                            //发布html报告
+                            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, icon: '', keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'playwrightHTML Report', reportTitles: '', useWrapperFileDirectly: true])
+                              }
+                         }
+
                 }
-                 post {
-                    always{
-                        //发布html报告
-                        publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, icon: '', keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'playwrightHTML Report', reportTitles: '', useWrapperFileDirectly: true])
-                          }
-                       }
+
 
             }
         }
