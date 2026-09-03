@@ -65,8 +65,8 @@ pipeline {
             steps{
               //安装静态服务器 
               sh 'npm install serve'
-              //部署服务
-              sh 'serve -s build'
+              //部署服务,写入项目目录的/node_modules
+              sh 'node_modules/.bin/serve -s build'
               //用 Playwright 运行自动化测试的命令，通常用于测试网页功能
               sh 'npx playwright test'
 
