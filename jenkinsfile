@@ -56,7 +56,7 @@ pipeline {
                 //在ESE测试阶段拉取playwright
                 docker {
                     // 拉取playwright镜像
-                    image 'mcr.microsoft.com/playwright:v1.39.0-noble'
+                    image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
                     // 复用当前工作空间，确保容器能够访问已检出的代码
                     reuseNode true
                 }
