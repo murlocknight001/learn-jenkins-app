@@ -69,8 +69,8 @@ pipeline {
               sh 'node_modules/.bin/serve -s build &'
               //等待服务器启动完成后才能进行测试,让当前 Shell 进程暂停 10 秒
               sh 'sleep 10'
-              //用 Playwright 运行自动化测试的命令，通常用于测试网页功能
-              sh 'npx playwright test'
+              //用 Playwright 运行自动化测试的命令，并生成测试报告
+              sh 'npx playwright test --reporter=html'
 
             }
 
