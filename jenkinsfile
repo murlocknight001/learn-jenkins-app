@@ -30,7 +30,7 @@ pipeline {
                 '''
             }
         }
-
+        //测试
         stage('Run Test'){
             //同步执行
             parallel{
@@ -96,5 +96,27 @@ pipeline {
 
             }
         }
+
+        //部署
+        stage('deploy'){
+            agent {
+                docker {
+                    // 在轻量级 Node.js 18 容器中执行本阶段
+                    image 'node:18-alpine'
+                    // 复用当前工作空间，确保容器能够访问已检出的代码
+                    reuseNode true
+                }
+            }
+            steps {
+                // 执行构建所需的 Shell 命令
+                sh '''
+                   # 安装netlify-cli命令行工具,安装在当前项目的node_modules目录下
+                   npm install netlify-cli
+                   # 调用在当前项目目录下的netlify 查看版本
+                   node_modules/.bin/netlify --version
+                '''
+            }
+        }
+
     }
 }
