@@ -4,6 +4,7 @@ pipeline {
     //环境变量
     environment{
         NETLIFY_SITE_ID = '1aea8aca-7a2b-4ac3-bf0e-0eb41c903963'
+        NETLIFY_AUTH_TOKEN = credentials('netlify-dash-token')
     }
 
     stages {
@@ -118,6 +119,8 @@ pipeline {
                    node_modules/.bin/netlify --version
                    # 打印要部署的project id
                    echo "deploing to production Site ID: $NETLIFY_SITE_ID"
+                   # 调用在当前项目目录下的netlify 查看Netlify CLI的登录状态
+                   node_modules/.bin/netlify status
                 '''
             }
         }
