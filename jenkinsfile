@@ -21,6 +21,7 @@ pipeline {
             steps {
                 // 执行构建所需的 Shell 命令
                 sh '''
+                   # 测试Git轮询
                    # 查看构建前的工作空间内容
                    ls -la
                    # 输出 Node.js 与 npm 版本，便于排查环境问题
