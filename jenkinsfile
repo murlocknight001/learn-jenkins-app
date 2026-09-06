@@ -1,10 +1,11 @@
 pipeline {
     // 默认允许流水线在任意可用的 Jenkins Agent 上运行
     agent any
-    //环境变量
+    //全局环境变量
     environment{
         NETLIFY_SITE_ID = '1aea8aca-7a2b-4ac3-bf0e-0eb41c903963'
         NETLIFY_AUTH_TOKEN = credentials('netlify-dash-token')
+        CI_ENVIRONMENT_URL = 'https://cerulean-gingersnap-aea71c.netlify.app/'
     }
 
     stages {
@@ -96,8 +97,6 @@ pipeline {
                          }
 
                 }
-
-
             }
         }
 
@@ -126,6 +125,35 @@ pipeline {
                    node_modules/.bin/netlify deploy --dir=build --prod --no-build
                 '''
             }
+        }
+
+        stage('Prod E2E'){
+            agent {
+                //在ESE测试阶段拉取playwright
+                docker {
+                    // 拉取playwright镜像
+                    image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                    // 复用当前工作空间，确保容器能够访问已检出的代码
+                    reuseNode true
+                }
+            }
+            //Prod E2E阶段环境变量
+            environment{
+                CI_ENVIRONMENT_URL = 'https://cerulean-gingersnap-aea71c.netlify.app/'
+                }           
+            steps{
+            //用 Playwright 运行自动化测试的命令，并生成测试报告
+            sh 'npx playwright test --reporter=html'
+
+            }
+
+            post {
+                always{
+                    //发布html报告
+                    publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, icon: '', keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'playwrightE2E', reportTitles: '', useWrapperFileDirectly: true])
+                        }
+                    }
+
         }
 
     }
