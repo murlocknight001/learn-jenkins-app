@@ -5,7 +5,6 @@ pipeline {
     environment{
         NETLIFY_SITE_ID = '1aea8aca-7a2b-4ac3-bf0e-0eb41c903963'
         NETLIFY_AUTH_TOKEN = credentials('netlify-dash-token')
-        CI_ENVIRONMENT_URL = 'https://cerulean-gingersnap-aea71c.netlify.app/'
     }
 
     stages {
@@ -99,9 +98,8 @@ pipeline {
                 }
             }
         }
-
-        //部署
-        stage('deploy'){
+        //部署到测试环境
+        stage('deploy staging'){
             agent {
                 docker {
                     // 在轻量级 Node.js 18 容器中执行本阶段
@@ -118,7 +116,34 @@ pipeline {
                    # 调用在当前项目目录下的netlify 查看版本
                    node_modules/.bin/netlify --version
                    # 打印要部署的project id
-                   echo "deploing to production Site ID: $NETLIFY_SITE_ID"
+                   echo "deploying to staging Site ID: $NETLIFY_SITE_ID"
+                   # 调用在当前项目目录下的netlify 查看Netlify CLI的登录状态
+                   node_modules/.bin/netlify status
+                   # 调用在当前项目目录下的netlify 开始部署项目,项目文件夹名为build
+                   node_modules/.bin/netlify deploy --dir=build --no-build
+                '''
+            }
+        }
+
+        //部署到生产环境
+        stage('deploy production'){
+            agent {
+                docker {
+                    // 在轻量级 Node.js 18 容器中执行本阶段
+                    image 'node:18-alpine'
+                    // 复用当前工作空间，确保容器能够访问已检出的代码
+                    reuseNode true
+                }
+            }
+            steps {
+                // 执行构建所需的 Shell 命令
+                sh '''
+                   # 安装netlify-cli命令行工具,安装在当前项目的node_modules目录下
+                   npm install netlify-cli
+                   # 调用在当前项目目录下的netlify 查看版本
+                   node_modules/.bin/netlify --version
+                   # 打印要部署的project id
+                   echo "deploying to production Site ID: $NETLIFY_SITE_ID"
                    # 调用在当前项目目录下的netlify 查看Netlify CLI的登录状态
                    node_modules/.bin/netlify status
                    # 调用在当前项目目录下的netlify 开始部署项目,项目文件夹名为build
