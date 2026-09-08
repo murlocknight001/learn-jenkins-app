@@ -125,6 +125,17 @@ pipeline {
             }
         }
 
+        //在部署到生产环境之前进行手动确认    
+        stage('approval') {
+            steps{
+                //使用timeout来包裹input
+                timeout(time: 1, unit: 'MINUTES') {
+                    
+                    input 'ready to deploy?'
+                }                
+            }
+        }
+        
         //部署到生产环境
         stage('deploy production'){
             agent {
