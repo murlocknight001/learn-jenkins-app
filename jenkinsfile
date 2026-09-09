@@ -120,7 +120,7 @@ pipeline {
                    # 调用在当前项目目录下的netlify 查看Netlify CLI的登录状态
                    node_modules/.bin/netlify status
                    # 调用在当前项目目录下的netlify 开始部署项目,项目文件夹名为build
-                   node_modules/.bin/netlify deploy --dir=build --no-build
+                   node_modules/.bin/netlify deploy --dir=build --no-build --json
                 '''
             }
         }
@@ -135,7 +135,7 @@ pipeline {
                 }                
             }
         }
-        
+
         //部署到生产环境
         stage('deploy production'){
             agent {
