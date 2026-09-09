@@ -111,8 +111,8 @@ pipeline {
             steps {
                 // 执行构建所需的 Shell 命令
                 sh '''
-                   # 安装netlify-cli命令行工具,安装在当前项目的node_modules目录下
-                   npm install netlify-cli
+                   # 安装netlify-cli命令行工具和jq,安装在当前项目的node_modules目录下
+                   npm install netlify-cli node-jq
                    # 调用在当前项目目录下的netlify 查看版本
                    node_modules/.bin/netlify --version
                    # 打印要部署的project id
@@ -121,6 +121,8 @@ pipeline {
                    node_modules/.bin/netlify status
                    # 调用在当前项目目录下的netlify 开始部署项目,项目文件夹名为build
                    node_modules/.bin/netlify deploy --dir=build --no-build --json > deploy-output.json
+                   # 调用jq解析deploy-output.json
+                   node_modules/.bin/node-jq -r '.deploy_url' deploy-output.json
                 '''
             }
         }
