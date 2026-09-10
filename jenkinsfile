@@ -120,15 +120,11 @@ pipeline {
                    node_modules/.bin/netlify status
                    # 调用在当前项目目录下的netlify 开始部署项目,项目文件夹名为build
                    node_modules/.bin/netlify deploy --dir=build --no-build --json > deploy-output.json
+                   # 调用jq解析deploy-output.json,将解析出的URL路径存入当前stage环境变量
+                   export CI_ENVIRONMENT_URL=$(node_modules/.bin/node-jq -r '.deploy_url' deploy-output.json)
+                   # 对本次staging部署执行E2E测试
+                   npx playwright test --reporter=html
                 '''
-
-                script {
-                    //调用jq解析deploy-output.json,将jq解析出的URL路径存入环境变量
-                    env.STAGING_URL = sh(script: "node_modules/.bin/node-jq -r '.deploy_url' deploy-output.json",returnStdout: true)
-                }
-
-                //对本次staging部署执行E2E测试
-                sh 'CI_ENVIRONMENT_URL="$STAGING_URL" npx playwright test --reporter=html'
             }
 
             post {
