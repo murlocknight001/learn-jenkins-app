@@ -142,7 +142,7 @@ pipeline {
             }
             //stg E2E阶段环境变量
             environment{
-                CI_ENVIRONMENT_URL = "$(env.STAGING_URL)"
+                CI_ENVIRONMENT_URL = "${env.STAGING_URL}"
                 }           
             steps{
             //用 Playwright 运行自动化测试的命令，并生成测试报告
