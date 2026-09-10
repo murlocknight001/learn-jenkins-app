@@ -119,7 +119,7 @@ pipeline {
                    # 调用在当前项目目录下的netlify 查看Netlify CLI的登录状态
                    node_modules/.bin/netlify status
                    # 调用在当前项目目录下的netlify 开始部署项目,项目文件夹名为build
-                   node_modules/.bin/netlify deploy --dir=build --no-build --json > deploy-output.json
+                   node_modules/.bin/netlify deploy --dir=build --json > deploy-output.json
                    # 调用jq解析deploy-output.json,将解析出的URL路径存入当前stage环境变量
                    export CI_ENVIRONMENT_URL=$(node_modules/.bin/node-jq -r '.deploy_url' deploy-output.json)
                    # 对本次staging部署执行E2E测试
@@ -170,7 +170,7 @@ pipeline {
                    # 调用在当前项目目录下的netlify 查看Netlify CLI的登录状态
                    node_modules/.bin/netlify status
                    # 调用在当前项目目录下的netlify 开始部署项目,项目文件夹名为build
-                   node_modules/.bin/netlify deploy --dir=build --prod --no-build
+                   node_modules/.bin/netlify deploy --dir=build --prod
                 '''
 
                 //对生产环境执行E2E测试
