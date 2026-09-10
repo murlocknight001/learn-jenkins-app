@@ -111,7 +111,7 @@ pipeline {
             steps {
                 sh '''
                    # 安装netlify-cli命令行工具和jq,安装在当前项目的node_modules目录下
-                   npm install netlify-cli node-jq
+                   npm install netlify-cli@17.38.1 node-jq
                    # 调用在当前项目目录下的netlify 查看版本
                    node_modules/.bin/netlify --version
                    # 打印要部署的project id
@@ -166,7 +166,7 @@ pipeline {
             steps {
                 sh '''
                    # 安装netlify-cli命令行工具,安装在当前项目的node_modules目录下
-                   npm install netlify-cli
+                   npm install netlify-cli@17.38.1
                    # 调用在当前项目目录下的netlify 查看版本
                    node_modules/.bin/netlify --version
                    # 打印要部署的project id
