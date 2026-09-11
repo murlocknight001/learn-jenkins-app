@@ -5,6 +5,7 @@ pipeline {
     environment{
         NETLIFY_SITE_ID = '1aea8aca-7a2b-4ac3-bf0e-0eb41c903963'
         NETLIFY_AUTH_TOKEN = credentials('netlify-dash-token')
+        REACT_APP_VERSION = '1.2.3'
     }
 
     stages {
@@ -135,16 +136,6 @@ pipeline {
             }
         }
 
-        //在部署到生产环境之前进行手动确认    
-        stage('approval') {
-            steps{
-                //使用timeout来包裹input
-                timeout(time: 1, unit: 'MINUTES') {
-                    
-                    input 'ready to deploy?'
-                }                
-            }
-        }
 
         //部署到生产环境并执行E2E测试
         stage('prod deploy'){
